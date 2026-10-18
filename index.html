@@ -1,0 +1,223 @@
+<!doctype html>
+<!-- Copyright © 2026 Betttech Global Ventures (BGV) Limited. All rights reserved. See LICENSE. -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Bule</title>
+<meta name="description" content="Tells you whether the price you've been quoted is fair, and what to say next. Works offline.">
+<meta name="theme-color" content="#0A1F18">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Bule">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="icon" href="icons/icon-192.png" sizes="192x192">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Recursive:slnt,wght,CASL,MONO@-15..0,300..1000,0..1,0..1&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+
+<header class="bar">
+  <h1 class="brand">Bule</h1>
+  <button class="chip city-btn" type="button" id="city-btn" aria-haspopup="dialog">
+    <span class="visually-hidden">City: </span><span id="city-nm"></span>
+  </button>
+  <span class="status" id="status" hidden></span>
+  <button class="chip install" type="button" id="install" hidden>Install</button>
+  <button class="acct" type="button" id="acct" aria-haspopup="dialog" hidden></button>
+</header>
+
+<main>
+  <!-- The counter: pick a thing, punch in the price, get the verdict -->
+  <section class="counter">
+    <button class="item-btn" type="button" id="item-btn" aria-haspopup="dialog">
+      <span class="item-nm" id="item-nm"></span>
+      <span class="item-sub" id="item-sub"></span>
+      <span class="item-cue" aria-hidden="true">Change</span>
+    </button>
+
+    <div class="entry" id="entry-wrap">
+      <output class="entry-num" id="entry" for="pad">0</output>
+      <span class="entry-cur" id="entry-cur"></span>
+      <span class="entry-home" id="entry-home"></span>
+    </div>
+
+    <div class="verdict" id="verdict" data-state="empty" aria-live="polite">
+      <p class="word" id="word">How much?</p>
+      <p class="advice" id="advice">Punch in the price they asked for.</p>
+      <p class="move" id="move" hidden></p>
+    </div>
+
+    <div class="scale">
+      <div class="track" id="track">
+        <div class="zones" id="zones" aria-hidden="true"></div>
+        <div class="mine-dots" id="mine-dots" aria-hidden="true"></div>
+        <div class="needle" id="needle" hidden aria-hidden="true"></div>
+      </div>
+      <p class="scale-key" id="scale-key"></p>
+      <p class="source" id="source"></p>
+    </div>
+
+    <div class="pad" id="pad" role="group" aria-label="Price keypad"></div>
+  </section>
+
+  <div class="panels">
+    <section class="panel" aria-labelledby="list-h">
+      <h2 id="list-h">Usual prices</h2>
+      <ul class="prices" id="prices"></ul>
+    </section>
+
+    <div class="side">
+      <section class="panel" aria-labelledby="say-h">
+        <h2 id="say-h">What to say</h2>
+        <ul class="phrases" id="phrases"></ul>
+        <p class="tip" id="city-tip"></p>
+      </section>
+
+      <section class="panel" aria-labelledby="add-h">
+        <h2 id="add-h">Add what you paid</h2>
+        <p class="note" id="add-note"></p>
+        <form id="add" novalidate>
+          <button class="paid-btn" type="submit" id="paid-btn" disabled>Type a price first</button>
+          <p class="msg" id="add-msg" role="status"></p>
+          <button class="link" type="button" id="clear" hidden>Remove my prices for this city</button>
+        </form>
+      </section>
+    </div>
+  </div>
+
+  <footer>
+    <p>Prices marked "Sample" haven't been checked yet, so don't rely on them. Exchange rates are approximate and fixed in the app.</p>
+    <p class="settings">
+      <label>Show my money in
+        <select id="home">
+          <option value="GBP">£ GBP</option>
+          <option value="USD">$ USD</option>
+          <option value="EUR">€ EUR</option>
+        </select>
+      </label>
+    </p>
+    <p class="links"><button class="link" type="button" id="foot-acct">Sign in or create an account</button>
+      <button class="link" type="button" data-privacy>Privacy</button>
+      <a class="link" href="mailto:info@betttech.co.uk?subject=Bule">Contact us</a></p>
+    <p class="org">Bule™ is a trading name of Betttech Global Ventures (BGV) Limited, Company No. 11753604.</p>
+  </footer>
+</main>
+
+<dialog class="sheet" id="picker" aria-labelledby="picker-h">
+  <div class="sheet-in">
+    <div class="sheet-top">
+      <h2 id="picker-h"></h2>
+      <button class="x" type="button" id="picker-x" aria-label="Close">&times;</button>
+    </div>
+    <input type="search" id="picker-q" placeholder="Search" autocomplete="off">
+    <ul class="picker-list" id="picker-list"></ul>
+  </div>
+</dialog>
+
+<dialog class="sheet" id="request" aria-labelledby="request-h">
+  <form class="sheet-in" id="request-form" novalidate>
+    <div class="sheet-top">
+      <h2 id="request-h">Request a country</h2>
+      <button class="x" type="button" id="request-x" aria-label="Close">&times;</button>
+    </div>
+    <p class="note">Tell us where you're going. We add the most-requested places first.</p>
+    <label class="field">Country
+      <input id="req-country" maxlength="60" autocomplete="off" required>
+    </label>
+    <label class="field">City <span class="opt">(optional)</span>
+      <input id="req-city" maxlength="60" autocomplete="off">
+    </label>
+    <label class="field">Email <span class="opt">(optional)</span>
+      <input id="req-email" type="email" maxlength="120" autocomplete="email">
+      <span class="hint">Only if you'd like us to tell you when it's added.</span>
+    </label>
+    <button class="paid-btn" type="submit">Send request</button>
+    <p class="msg bad" id="req-msg" role="status"></p>
+  </form>
+</dialog>
+
+<dialog class="sheet" id="install-help" aria-labelledby="install-h">
+  <div class="sheet-in">
+    <div class="sheet-top">
+      <h2 id="install-h">Add Bule to your home screen</h2>
+      <button class="x" type="button" id="install-x" aria-label="Close">&times;</button>
+    </div>
+    <ol class="steps" id="install-steps"></ol>
+    <p class="note">After that, open Bule from your home screen. It works with no signal.</p>
+  </div>
+</dialog>
+
+<dialog class="sheet" id="account" aria-labelledby="account-h">
+  <div class="sheet-in">
+    <div class="sheet-top">
+      <h2 id="account-h">Sign in</h2>
+      <button class="x" type="button" id="account-x" aria-label="Close">&times;</button>
+    </div>
+    <div id="acc-out">
+      <p class="note" id="acc-intro">You don't need an account to use Bule. Signing in lets us know who's using it and we inform you of the new cities we support.</p>
+      <button class="google-btn" type="button" id="acc-google" hidden>
+        <svg viewBox="0 0 48 48" width="20" height="20" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9.1 3.6l6.8-6.8C35.8 2.4 30.3 0 24 0 14.6 0 6.6 5.4 2.7 13.3l7.9 6.1C12.5 13.6 17.8 9.5 24 9.5z"/><path fill="#4285F4" d="M46.1 24.5c0-1.6-.1-3.1-.4-4.5H24v9h12.4c-.5 2.9-2.2 5.3-4.6 7l7.4 5.7c4.3-4 6.9-9.9 6.9-17.2z"/><path fill="#FBBC05" d="M10.5 28.6c-.5-1.4-.8-3-.8-4.6s.3-3.2.8-4.6l-7.9-6.1C1 16.6 0 20.2 0 24s1 7.4 2.7 10.7l7.8-6.1z"/><path fill="#34A853" d="M24 48c6.5 0 11.9-2.1 15.9-5.8l-7.4-5.7c-2.1 1.4-4.8 2.3-8.5 2.3-6.2 0-11.5-4.1-13.4-9.9l-7.9 6.1C6.6 42.6 14.6 48 24 48z"/></svg>
+        Continue with Google
+      </button>
+      <p class="or" id="acc-or" hidden><span>or</span></p>
+    </div>
+    <form id="acc-form" novalidate>
+      <label class="field" id="acc-name-f" hidden>Name <span class="opt">(optional)</span>
+        <input id="acc-name" maxlength="80" autocomplete="name">
+      </label>
+      <label class="field" id="acc-email-f">Email
+        <input id="acc-email" type="email" maxlength="120" autocomplete="email" required>
+      </label>
+      <label class="field" id="acc-pass-f"><span id="acc-pass-l">Password</span>
+        <input id="acc-pass" type="password" maxlength="72" autocomplete="current-password" required>
+        <span class="hint" id="acc-pass-hint"></span>
+      </label>
+      <button class="paid-btn" type="submit" id="acc-submit">Sign in</button>
+      <p class="msg bad" id="acc-msg" role="status"></p>
+      <p class="acc-links" id="acc-links">
+        <button class="link" type="button" id="acc-mode">New to Bule? Create an account</button>
+        <button class="link" type="button" id="acc-forgot">Forgot your password?</button>
+      </p>
+    </form>
+    <div id="acc-in" hidden>
+      <p class="note" id="acc-who"></p>
+      <button class="paid-btn" type="button" id="acc-signout">Sign out</button>
+      <p class="msg bad" id="acc-in-msg" role="status"></p>
+      <p class="acc-links">
+        <button class="link" type="button" data-privacy>Privacy</button>
+        <button class="link" type="button" id="acc-delete">Delete my account</button>
+      </p>
+    </div>
+  </div>
+</dialog>
+
+<dialog class="sheet" id="privacy" aria-labelledby="privacy-h">
+  <div class="sheet-in">
+    <div class="sheet-top">
+      <h2 id="privacy-h">Privacy</h2>
+      <button class="x" type="button" id="privacy-x" aria-label="Close">&times;</button>
+    </div>
+    <div class="prose">
+      <p><b>Without an account,</b> Bule makes a random ID for this phone. It isn't linked to your name, and we can't tell who you are from it.</p>
+      <p><b>Usage counts.</b> To see how Bule is used, it records things like opening the app, choosing a city, checking a price and whether that price was fair. It doesn't record the price you typed or where you are.</p>
+      <p><b>Prices you add</b> are shared with other travellers without your name. They're only shown as part of a range, never one by one.</p>
+      <p><b>If you sign in,</b> we keep your email address, your name if you give it, and when you signed up. We link your usage to your account so we know how many people use Bule. We don't sell or share any of this.</p>
+      <p><b>To delete your account,</b> sign in and choose Delete my account, or email <a class="link" href="mailto:info@betttech.co.uk?subject=Bule%20privacy">info@betttech.co.uk</a>.</p>
+      <p><label class="check"><input type="checkbox" id="usage-on"> Send anonymous usage counts</label></p>
+    </div>
+  </div>
+</dialog>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="config.js"></script>
+<script src="cities.js"></script>
+<script src="account.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

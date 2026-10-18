@@ -1,0 +1,108 @@
+<!doctype html>
+<!-- Copyright © 2026 Betttech Global Ventures (BGV) Limited. All rights reserved. See LICENSE. -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Bule scouts</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#0A1F18">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Bule scouts">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="icon" href="icons/icon-192.png" sizes="192x192">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Recursive:slnt,wght,CASL,MONO@-15..0,300..1000,0..1,0..1&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+
+<header class="bar">
+  <h1 class="brand">Bule scouts</h1>
+  <span class="status" id="status" hidden></span>
+</header>
+
+<main class="scout">
+  <!-- Step 1: the scout's code -->
+  <section class="panel" id="signin" hidden aria-labelledby="signin-h">
+    <h2 id="signin-h">Your scout code</h2>
+    <p class="lead">Type the code you were sent. You only need to do this once on this phone.</p>
+    <form id="code-form" novalidate>
+      <label class="field">Code
+        <input id="code" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="20" required>
+      </label>
+      <button class="paid-btn" type="submit">Start</button>
+      <p class="msg bad" id="code-msg" role="status"></p>
+    </form>
+  </section>
+
+  <!-- Step 2: add prices -->
+  <section class="panel" id="work" hidden aria-labelledby="work-h">
+    <h2 id="work-h">Add a price</h2>
+    <p class="lead" id="hello"></p>
+    <form id="price-form" novalidate>
+      <label class="field">Item
+        <select id="item" required></select>
+        <span class="hint" id="item-hint"></span>
+      </label>
+      <label class="field">Where
+        <input id="place" maxlength="200" autocomplete="off" required>
+        <span class="hint">So someone could find it, like "Corner of Hang Bac and Ma May".</span>
+      </label>
+      <div class="two">
+        <label class="field">First price
+          <input id="first" inputmode="decimal" autocomplete="off">
+          <span class="hint">What they asked first</span>
+        </label>
+        <label class="field">Final price
+          <input id="final" inputmode="decimal" autocomplete="off" required>
+          <span class="hint">The lowest they agreed to</span>
+        </label>
+      </div>
+      <fieldset class="choice">
+        <legend>Did you buy it?</legend>
+        <label><input type="radio" name="bought" value="yes"> Yes</label>
+        <label><input type="radio" name="bought" value="no" checked> No</label>
+      </fieldset>
+      <label class="field photo-pick">Photo
+        <input id="photo" type="file" accept="image/*">
+        <span class="hint">Of the stall, menu, price board or receipt. No faces, please.</span>
+        <img id="photo-preview" alt="" hidden>
+      </label>
+      <label class="field">Date
+        <input id="date" type="date" required>
+      </label>
+      <label class="field">Notes <span class="opt">(optional)</span>
+        <textarea id="notes" maxlength="1000"></textarea>
+      </label>
+      <button class="paid-btn" type="submit">Save this price</button>
+      <p class="msg bad" id="price-msg" role="status"></p>
+    </form>
+  </section>
+
+  <section class="panel" id="sent-panel" hidden aria-labelledby="queue-h">
+    <h2 id="queue-h">Your prices</h2>
+    <p class="lead" id="queue-note"></p>
+    <ul class="queue" id="queue"></ul>
+    <p><button class="paid-btn" type="button" id="send" hidden>Send now</button></p>
+    <h2>Progress</h2>
+    <p class="lead">Each item needs at least 5 prices, from at least 3 different sellers.</p>
+    <ul class="queue" id="progress"></ul>
+    <p><button class="link" type="button" id="signout">Not you? Use a different code</button></p>
+  </section>
+
+  <footer>
+    <p>Questions? <a class="link" href="mailto:info@betttech.co.uk?subject=Bule%20scouts">info@betttech.co.uk</a></p>
+    <p class="org">Bule™ is a trading name of Betttech Global Ventures (BGV) Limited, Company No. 11753604.</p>
+  </footer>
+</main>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="config.js"></script>
+<script src="cities.js"></script>
+<script src="scout.js"></script>
+</body>
+</html>
