@@ -159,7 +159,7 @@
   }
 
   const friendly = (err) =>
-    !err.status ? "Couldn't reach Bule. Check your connection and try again."
+    !err.status ? "Couldn't reach Bule just now. Try again in a minute."
     : /invalid_credentials|invalid_grant|Invalid login/i.test(err.code + err.message) ? "That email and password don't match."
     : /email_not_confirmed|not confirmed/i.test(err.code + err.message) ? "Confirm your email first, using the link we sent you."
     : /user_already_exists|already registered/i.test(err.code + err.message) ? "There's already an account with that email. Sign in instead."
