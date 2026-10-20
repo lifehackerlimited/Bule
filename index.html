@@ -2,6 +2,17 @@
 <!-- Copyright © 2026 Betttech Global Ventures (BGV) Limited. All rights reserved. See LICENSE. -->
 <html lang="en">
 <head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-DRYF42HMZE"></script>
+<script>
+  // Turned off when "Send anonymous usage counts" is unticked in Privacy.
+  if (localStorage.getItem("bule.usage.off") === "yes") window["ga-disable-G-DRYF42HMZE"] = true;
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-DRYF42HMZE');
+</script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Bule</title>
@@ -205,6 +216,7 @@
     <div class="prose">
       <p><b>Without an account,</b> Bule makes a random ID for this phone. It isn't linked to your name, and we can't tell who you are from it.</p>
       <p><b>Usage counts.</b> To see how Bule is used, it records things like opening the app, choosing a city, checking a price and whether that price was fair. It doesn't record the price you typed or where you are.</p>
+      <p><b>Google Analytics</b> also counts visits to this website, using a cookie. Google sees roughly which country you're in and what kind of phone you use, but not your name or the prices you check. Untick the box below to turn it off.</p>
       <p><b>Prices you add</b> are shared with other travellers without your name. They're only shown as part of a range, never one by one.</p>
       <p><b>If you sign in,</b> we keep your email address, your name if you give it, and when you signed up. We link your usage to your account so we know how many people use Bule. We don't sell or share any of this.</p>
       <p><b>To delete your account,</b> sign in and choose Delete my account, or email <a class="link" href="mailto:info@betttech.co.uk?subject=Bule%20privacy">info@betttech.co.uk</a>.</p>

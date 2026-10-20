@@ -246,6 +246,7 @@
   usageBox.closest("p").hidden = !ready;
   usageBox.addEventListener("change", () => {
     usageOn = usageBox.checked;
+    window["ga-disable-G-DRYF42HMZE"] = !usageOn; // Google Analytics, set up in the page's <head>
     if (usageOn) localStorage.removeItem(USAGE_OFF);
     else { localStorage.setItem(USAGE_OFF, "yes"); queue = []; localStorage.removeItem(USAGE); }
   });
