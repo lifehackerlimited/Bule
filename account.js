@@ -123,6 +123,12 @@
     $("foot-acct").textContent = session ? "Your account" : "Sign in or create an account";
   }
 
+  // Tells Google Analytics a new account was made. gtag is set up in the page's <head>,
+  // and sends nothing when usage counts are turned off in Privacy.
+  function gaSignUp(method) {
+    if (typeof gtag === "function") gtag("event", "sign_up", { method });
+  }
+
   const say = (text, good) => { msg.textContent = text; msg.classList.toggle("bad", !good); msg.classList.toggle("ok", !!good); };
 
   function setMode(m) {
@@ -183,7 +189,7 @@
         done("Signed in");
       } else if (mode === "signup") {
         const r = await auth(`signup?redirect_to=${encodeURIComponent(here())}`, { body: { email, password: pass, data: name ? { full_name: name } : {} } });
-        if (r.access_token) { keep(r); done("Account created"); }
+        if (r.access_token) { keep(r); gaSignUp("email"); done("Account created"); }
         else say(`Nearly done. We've sent a link to ${email}. Open it to confirm your account.`, true);
       } else if (mode === "forgot") {
         await auth(`recover?redirect_to=${encodeURIComponent(here())}`, { body: { email } });
@@ -271,10 +277,15 @@
     }
     const t = { access_token: h.get("access_token"), refresh_token: h.get("refresh_token"),
                 expires_in: h.get("expires_in"), expires_at: Number(h.get("expires_at")) || 0 };
-    try { keep({ ...t, user: await auth("user", { method: "GET", token: t.access_token }) }); }
+    let user;
+    try { user = await auth("user", { method: "GET", token: t.access_token }); keep({ ...t, user }); }
     catch { toast("Couldn't finish signing in. Try again."); return; }
     const type = h.get("type");
     if (type === "recovery") { openAccount("reset"); return; }
+    // A new account: either the confirm link from an email sign-up, or a first sign-in with Google,
+    // where the account was made moments ago.
+    if (type === "signup") gaSignUp("email");
+    else if (session.user.provider === "google" && Date.parse(user.last_sign_in_at) - Date.parse(user.created_at) < 60000) gaSignUp("google");
     toast(type === "signup" ? "Email confirmed. You're signed in." : "Signed in");
     track("sign_in", { detail: session.user.provider });
   }
