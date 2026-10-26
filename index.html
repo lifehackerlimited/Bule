@@ -152,6 +152,28 @@
   </form>
 </dialog>
 
+<dialog class="sheet" id="price-request" aria-labelledby="preq-h">
+  <form class="sheet-in" id="price-request-form" novalidate>
+    <div class="sheet-top">
+      <h2 id="preq-h">Request a price</h2>
+      <button class="x" type="button" id="price-request-x" aria-label="Close">&times;</button>
+    </div>
+    <p class="note">Tell us what you're buying. We add the most-requested things first.</p>
+    <label class="field">What are you buying?
+      <input id="preq-item" maxlength="80" autocomplete="off" placeholder="Like a boat trip or a haircut" required>
+    </label>
+    <label class="field">Details <span class="opt">(optional)</span>
+      <input id="preq-details" maxlength="120" autocomplete="off" placeholder="Like how long, how big, or where">
+    </label>
+    <label class="field">Email <span class="opt">(optional)</span>
+      <input id="preq-email" type="email" maxlength="120" autocomplete="email">
+      <span class="hint">Only if you'd like us to tell you when it's added.</span>
+    </label>
+    <button class="paid-btn" type="submit">Send request</button>
+    <p class="msg bad" id="preq-msg" role="status"></p>
+  </form>
+</dialog>
+
 <dialog class="sheet" id="install-help" aria-labelledby="install-h">
   <div class="sheet-in">
     <div class="sheet-top">

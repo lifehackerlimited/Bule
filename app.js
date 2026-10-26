@@ -253,12 +253,15 @@
           hits.map(([id, c]) => opt("data-city", id, state.city, c.name, c.country)).join("");
       }
       if (!html) html = `<li class="empty">We don't have "${pq.value.replace(/[<>&"]/g, "")}" yet.</li>`;
-      html += `<li class="req"><button type="button" data-request="yes"><span class="nm">Request a country</span>` +
+      html += `<li class="req"><button type="button" data-request="country"><span class="nm">Request a country</span>` +
         `<span class="sub">Not on the list? Tell us where you're going.</span></button></li>`;
     } else {
       html = city().items.filter(i => has(i.name + " " + i.unit)).map(i => opt("data-id", i.id, item().id, i.name, i.unit)).join("");
+      if (!html) html = `<li class="empty">Nothing matches "${pq.value.replace(/[<>&"]/g, "")}". Try a shorter word.</li>`;
+      html += `<li class="req"><button type="button" data-request="price"><span class="nm">Request a price</span>` +
+        `<span class="sub">Not on the list? Tell us what you're buying.</span></button></li>`;
     }
-    plist.innerHTML = html || `<li class="empty">Nothing matches "${pq.value.replace(/[<>&"]/g, "")}". Try a shorter word.</li>`;
+    plist.innerHTML = html;
   }
   function openPicker(mode, opener) {
     pickerMode = mode; pickerOpener = opener;
@@ -273,7 +276,11 @@
   pq.addEventListener("input", renderPicker);
   plist.addEventListener("click", (e) => {
     const b = e.target.closest("button"); if (!b) return;
-    if (b.dataset.request) { const term = pq.value.trim(); picker.close(); openRequest(term); return; }
+    if (b.dataset.request) {
+      const term = pq.value.trim(); picker.close();
+      if (b.dataset.request === "price") openPriceRequest(term); else openRequest(term);
+      return;
+    }
     if (b.dataset.city) setCity(b.dataset.city); else selectItem(b.dataset.id);
     picker.close();
   });
@@ -387,6 +394,40 @@
       else if (res.status === 400 && (await res.text()).includes("Too many")) reqMsg.textContent = "You've sent a lot of requests today. Thanks! Try again tomorrow.";
       else byEmail();
     } catch { reqMsg.textContent = "Couldn't send that. Check your connection and try again."; }
+    finally { if (btn) btn.disabled = false; }
+  });
+
+  // ---------- request a price ----------
+  const preq = $("price-request"), preqMsg = $("preq-msg");
+  function openPriceRequest(term) {
+    $("preq-h").textContent = `Request a price in ${city().name}`;
+    $("preq-item").value = term || ""; $("preq-details").value = ""; preqMsg.textContent = "";
+    preq.showModal();
+    $("preq-item").focus();
+  }
+  $("price-request-x").addEventListener("click", () => preq.close());
+  preq.addEventListener("click", (e) => { if (e.target === preq) preq.close(); });
+  $("price-request-form").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const name = $("preq-item").value.trim(), details = $("preq-details").value.trim(), email = $("preq-email").value.trim();
+    if (!name) { preqMsg.textContent = "Type what you're buying first."; $("preq-item").focus(); return; }
+    if (email && !$("preq-email").checkValidity()) { preqMsg.textContent = "That email address doesn't look right."; $("preq-email").focus(); return; }
+    const done = () => { if (typeof gtag === "function") gtag("event", "request_price", { city_id: state.city }); };
+    const byEmail = () => {
+      const body = `Please add a price for ${name}${details ? " (" + details + ")" : ""} in ${city().name}, ${city().country}.`;
+      location.href = `mailto:info@betttech.co.uk?subject=${encodeURIComponent("Bule: request a price")}&body=${encodeURIComponent(body)}`;
+      preq.close(); done();
+    };
+    if (!sharing) return byEmail();
+    if (!navigator.onLine) { preqMsg.textContent = "You're offline. Try again when you have signal."; return; }
+    const btn = e.submitter; if (btn) btn.disabled = true;
+    try {
+      const res = await api("item_requests", { method: "POST", headers: { Prefer: "return=minimal" },
+        body: JSON.stringify({ city_id: state.city, item: name, details: details || null, email: email || null, device_id: device }) });
+      if (res.ok) { preq.close(); toast(`Thanks. We've noted ${name.toLowerCase()}.`); done(); }
+      else if (res.status === 400 && (await res.text()).includes("Too many")) preqMsg.textContent = "You've sent a lot of requests today. Thanks! Try again tomorrow.";
+      else byEmail();
+    } catch { preqMsg.textContent = "Couldn't send that. Check your connection and try again."; }
     finally { if (btn) btn.disabled = false; }
   });
 
