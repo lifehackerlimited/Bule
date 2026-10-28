@@ -176,20 +176,28 @@
     return "Sample price, not yet checked.";
   }
 
+  // The list shows the first TOP items in items.csv until someone asks for the rest.
+  const TOP = 10;
+  let showAll = false;
   function renderList() {
-    const cur = item().id;
-    $("prices").innerHTML = city().items.map(withStats).map(it => `
+    const cur = item().id, all = city().items;
+    $("prices").innerHTML = (showAll ? all : all.slice(0, TOP)).map(withStats).map(it => `
       <li><button class="row" type="button" data-id="${it.id}" aria-current="${it.id === cur}">
         <span class="nm">${it.name}</span>
         <span class="rng">${num(it.low)} to ${num(it.high)}</span>
         <span class="how ${it.haggle ? "haggle" : ""}">${it.haggle ? "Haggle" : "Usually fixed"}${it.live ? `, ${it.shared} prices` : ""}</span>
         <span class="hm">${sameMoney() ? "" : `${home(it.low)} to ${home(it.high)}`}</span>
       </button></li>`).join("");
+    const more = $("more-prices");
+    more.hidden = all.length <= TOP;
+    more.setAttribute("aria-expanded", showAll);
+    more.textContent = showAll ? `Show the top ${TOP} only` : `Show all ${all.length} prices`;
     $("clear").hidden = !reports.some(r => r.city === state.city);
   }
 
   function selectItem(id) {
     state.item[state.city] = id;
+    if (city().items.findIndex(i => i.id === id) >= TOP) showAll = true; // so the chosen item is in the list
     save(); renderList(); renderCheck();
   }
 
@@ -291,7 +299,7 @@
   // ---------- other events ----------
   function setCity(id) {
     if (id === state.city) return;
-    state.city = id; digits = ""; lastVerdict = "empty";
+    state.city = id; digits = ""; lastVerdict = "empty"; showAll = false;
     $("add-msg").textContent = "";
     save(); renderCity();
     track("city", { city_id: id });
@@ -303,6 +311,7 @@
     const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (innerWidth < 900) window.scrollTo({ top: 0, behavior: reduce ? "auto" : "smooth" });
   });
+  $("more-prices").addEventListener("click", () => { showAll = !showAll; renderList(); });
   $("add").addEventListener("submit", (e) => {
     e.preventDefault();
     if (!digits) return;
@@ -381,7 +390,7 @@
     if (email && !$("req-email").checkValidity()) { reqMsg.textContent = "That email address doesn't look right."; $("req-email").focus(); return; }
     const byEmail = () => {
       const body = `Please add ${cityName ? cityName + ", " : ""}${country} to Bule.`;
-      location.href = `mailto:info@betttech.co.uk?subject=${encodeURIComponent("Bule: request a country")}&body=${encodeURIComponent(body)}`;
+      location.href = `mailto:hello@bule.life?subject=${encodeURIComponent("Bule: request a country")}&body=${encodeURIComponent(body)}`;
       request.close();
     };
     if (!sharing) return byEmail();
@@ -415,7 +424,7 @@
     const done = () => { if (typeof gtag === "function") gtag("event", "request_price", { city_id: state.city }); };
     const byEmail = () => {
       const body = `Please add a price for ${name}${details ? " (" + details + ")" : ""} in ${city().name}, ${city().country}.`;
-      location.href = `mailto:info@betttech.co.uk?subject=${encodeURIComponent("Bule: request a price")}&body=${encodeURIComponent(body)}`;
+      location.href = `mailto:hello@bule.life?subject=${encodeURIComponent("Bule: request a price")}&body=${encodeURIComponent(body)}`;
       preq.close(); done();
     };
     if (!sharing) return byEmail();
@@ -430,6 +439,12 @@
     } catch { preqMsg.textContent = "Couldn't send that. Check your connection and try again."; }
     finally { if (btn) btn.disabled = false; }
   });
+
+  // ---------- about ----------
+  const about = $("about");
+  document.addEventListener("click", (e) => { if (e.target.closest("[data-about]")) about.showModal(); });
+  $("about-x").addEventListener("click", () => about.close());
+  about.addEventListener("click", (e) => { if (e.target === about) about.close(); });
 
   let toastTimer;
   function toast(msg) {

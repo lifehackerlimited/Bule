@@ -80,6 +80,7 @@
     <section class="panel" aria-labelledby="list-h">
       <h2 id="list-h">Usual prices</h2>
       <ul class="prices" id="prices"></ul>
+      <button class="link more" type="button" id="more-prices" aria-controls="prices" aria-expanded="false" hidden></button>
     </section>
 
     <div class="side">
@@ -112,9 +113,10 @@
         </select>
       </label>
     </p>
-    <p class="links"><button class="link" type="button" id="foot-acct">Sign in or create an account</button>
+    <p class="links"><button class="link" type="button" data-about>About Bule</button>
+      <button class="link" type="button" id="foot-acct">Sign in or create an account</button>
       <button class="link" type="button" data-privacy>Privacy</button>
-      <a class="link" href="mailto:info@betttech.co.uk?subject=Bule">Contact us</a></p>
+      <a class="link" href="mailto:hello@bule.life?subject=Bule">Contact us</a></p>
     <p class="org">Bule™ is a trading name of Betttech Global Ventures (BGV) Limited, Company No. 11753604.</p>
   </footer>
 </main>
@@ -229,6 +231,22 @@
   </div>
 </dialog>
 
+<dialog class="sheet" id="about" aria-labelledby="about-h">
+  <div class="sheet-in">
+    <div class="sheet-top">
+      <h2 id="about-h">About Bule</h2>
+      <button class="x" type="button" id="about-x" aria-label="Close">&times;</button>
+    </div>
+    <div class="prose">
+      <p><b>Bule</b> (boo-lay) is Indonesian slang for a foreigner, usually the one paying double. The app tells you in a second whether the price you've been quoted is fair, and what to offer instead. It's free, there's nothing to download, and it works with no signal.</p>
+      <p><b>Where the prices come from.</b> Each price starts as our best estimate, marked "Sample". Local scouts then check it on the ground. Once enough travellers have added what they paid, their prices take over.</p>
+      <p><b>Our local scouts.</b> We pay people who live in each place, and speak the language, to visit markets, warungs, harbours and shops and ask what things cost, the way a local would. For each item they find at least 5 prices from at least 3 different sellers, with a photo of the stall, menu or price board. We check every price before it goes into the app. We're starting in Lombok, then Bangkok, Hanoi and Marrakech.</p>
+      <p><b>Want to be a scout?</b> If you live somewhere Bule covers and know what things really cost, email <a class="link" href="mailto:hello@bule.life?subject=Bule%20scouts">hello@bule.life</a>.</p>
+      <p><b>Who we are.</b> Bule is made in the UK by Betttech Global Ventures (BGV) Limited. Questions, ideas or a price that looks wrong? Email <a class="link" href="mailto:hello@bule.life?subject=Bule">hello@bule.life</a>.</p>
+    </div>
+  </div>
+</dialog>
+
 <dialog class="sheet" id="privacy" aria-labelledby="privacy-h">
   <div class="sheet-in">
     <div class="sheet-top">
@@ -241,7 +259,7 @@
       <p><b>Google Analytics</b> also counts visits to this website, using a cookie. Google sees roughly which country you're in and what kind of phone you use, but not your name or the prices you check. Untick the box below to turn it off.</p>
       <p><b>Prices you add</b> are shared with other travellers without your name. They're only shown as part of a range, never one by one.</p>
       <p><b>If you sign in,</b> we keep your email address, your name if you give it, and when you signed up. We link your usage to your account so we know how many people use Bule. We don't sell or share any of this.</p>
-      <p><b>To delete your account,</b> sign in and choose Delete my account, or email <a class="link" href="mailto:info@betttech.co.uk?subject=Bule%20privacy">info@betttech.co.uk</a>.</p>
+      <p><b>To delete your account,</b> sign in and choose Delete my account, or email <a class="link" href="mailto:hello@bule.life?subject=Bule%20privacy">hello@bule.life</a>.</p>
       <p><label class="check"><input type="checkbox" id="usage-on"> Send anonymous usage counts</label></p>
     </div>
   </div>

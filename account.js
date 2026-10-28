@@ -234,7 +234,7 @@
       });
       if (!res.ok) throw new Error();
       forget(); sheet.close(); toast("Your account has been deleted");
-    } catch { out.textContent = "Couldn't delete it just now. Try again, or email info@betttech.co.uk and we'll do it for you."; }
+    } catch { out.textContent = "Couldn't delete it just now. Try again, or email hello@bule.life and we'll do it for you."; }
   });
 
   $("acct").addEventListener("click", () => openAccount());

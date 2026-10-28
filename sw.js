@@ -1,7 +1,7 @@
 // Copyright © 2026 Betttech Global Ventures (BGV) Limited. All rights reserved. See LICENSE.
 // Saves the app on the phone so it opens with no connection.
 // Bump VERSION whenever app files change, so phones pick up the new copy.
-const VERSION = "bule-v18";
+const VERSION = "bule-v19";
 const FONTS = "bule-fonts";
 const SHELL = [
   "./",
