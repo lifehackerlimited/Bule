@@ -9,4 +9,4 @@ const SHARING = {
 };
 
 // Where "Leave a tip" goes, like "https://ko-fi.com/yourpage". Leave it empty and the tip links stay hidden.
-const TIP_URL = "";
+const TIP_URL = "https://ko-fi.com/bulelife";
