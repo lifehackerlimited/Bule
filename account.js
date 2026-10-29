@@ -120,7 +120,6 @@
       b.classList.remove("in");
       b.setAttribute("aria-label", "Sign in");
     }
-    $("foot-acct").textContent = session ? "Your account" : "Sign in or create an account";
   }
 
   // Tells Google Analytics a new account was made. gtag is set up in the page's <head>,
@@ -238,7 +237,6 @@
   });
 
   $("acct").addEventListener("click", () => openAccount());
-  $("foot-acct").addEventListener("click", () => openAccount());
   $("account-x").addEventListener("click", () => sheet.close());
   sheet.addEventListener("click", (e) => { if (e.target === sheet) sheet.close(); });
 

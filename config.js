@@ -7,3 +7,6 @@ const SHARING = {
   anonKey: "sb_publishable_rJelk2yI9uyKD7GWyeezUw_FP0cQSwP",  // the "anon public" key
   minPrices: 10, // how many traveller prices an item needs before they replace the sample range
 };
+
+// Where "Leave a tip" goes, like "https://ko-fi.com/yourpage". Leave it empty and the tip links stay hidden.
+const TIP_URL = "";

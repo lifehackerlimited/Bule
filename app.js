@@ -440,7 +440,13 @@
     finally { if (btn) btn.disabled = false; }
   });
 
-  // ---------- about ----------
+  // ---------- about, and the tip links (see TIP_URL in config.js) ----------
+  const tipUrl = typeof TIP_URL === "string" && /^https:\/\//.test(TIP_URL) ? TIP_URL : "";
+  document.querySelectorAll("[data-tip]").forEach(el => { el.hidden = !tipUrl; });
+  document.querySelectorAll("[data-tip-link]").forEach(a => {
+    if (tipUrl) a.href = tipUrl;
+    a.addEventListener("click", () => { if (typeof gtag === "function") gtag("event", "tip_click"); });
+  });
   const about = $("about");
   document.addEventListener("click", (e) => { if (e.target.closest("[data-about]")) about.showModal(); });
   $("about-x").addEventListener("click", () => about.close());
