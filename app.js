@@ -110,9 +110,25 @@
     $("phrases").innerHTML = c.phrases.map(p =>
       `<li class="phrase"><span class="say" lang="${c.lang}">${p.say}</span><span class="means">${p.means}</span></li>`).join("");
     $("city-tip").textContent = c.tip;
+    renderPartners();
     renderPad();
     renderList();
     renderCheck();
+  }
+
+  // Businesses that recommend Bule, from data/partners.csv. Shuffled, so no partner is always at the top.
+  const esc = (s) => String(s).replace(/[&<>"']/g, ch => `&#${ch.charCodeAt(0)};`);
+  function renderPartners() {
+    const list = ((typeof PARTNERS !== "undefined" && PARTNERS[state.city]) || []).slice();
+    for (let i = list.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [list[i], list[j]] = [list[j], list[i]]; }
+    $("partners-panel").hidden = !list.length;
+    $("partners-h").textContent = `Partners in ${city().name}`;
+    $("partners").innerHTML = list.map(p => `
+      <li><a class="partner" href="${esc(p.link)}" target="_blank" rel="sponsored noopener" data-name="${esc(p.name)}">
+        <span class="nm">${esc(p.name)}</span>
+        <span class="what">${esc(p.what)}</span>
+        <span class="line">${esc(p.line)}</span>
+      </a></li>`).join("");
   }
 
   function renderCheck() {
@@ -312,6 +328,10 @@
     if (innerWidth < 900) window.scrollTo({ top: 0, behavior: reduce ? "auto" : "smooth" });
   });
   $("more-prices").addEventListener("click", () => { showAll = !showAll; renderList(); });
+  $("partners").addEventListener("click", (e) => {
+    const a = e.target.closest(".partner");
+    if (a && typeof gtag === "function") gtag("event", "partner_click", { city_id: state.city, partner: a.dataset.name });
+  });
   $("add").addEventListener("submit", (e) => {
     e.preventDefault();
     if (!digits) return;

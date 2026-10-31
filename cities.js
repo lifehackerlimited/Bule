@@ -1,5 +1,5 @@
 // Copyright © 2026 Betttech Global Ventures (BGV) Limited. All rights reserved. See LICENSE.
-// Generated from data/cities.csv and data/items.csv by tools/data.py. Don't edit by hand:
+// Generated from data/cities.csv, data/items.csv and data/partners.csv by tools/data.py. Don't edit by hand:
 // edit the spreadsheets and run `python3 tools/data.py build`.
 //
 // low and high: the usual price range a local would pay, in local currency.
@@ -733,4 +733,8 @@ const CITIES = {
       { id: "shells", name: "Shell necklace", unit: "At Nadi market", low: 10, high: 30, haggle: true },
     ],
   },
+};
+
+// Businesses that recommend Bule, shown under "Partners". From data/partners.csv.
+const PARTNERS = {
 };
