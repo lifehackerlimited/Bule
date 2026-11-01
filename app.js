@@ -107,13 +107,25 @@
     $("city-nm").textContent = c.name;
     $("home").value = state.home;
     $("list-h").textContent = `Usual prices in ${c.name}`;
-    $("phrases").innerHTML = c.phrases.map(p =>
-      `<li class="phrase"><span class="say" lang="${c.lang}">${p.say}</span><span class="means">${p.means}</span></li>`).join("");
+    renderPhrases();
     $("city-tip").textContent = c.tip;
     renderPartners();
     renderPad();
     renderList();
     renderCheck();
+  }
+
+  // "What to say" shows the first TOP_PHRASES, and the rest under "Show all".
+  const TOP_PHRASES = 5;
+  let allPhrases = false;
+  function renderPhrases() {
+    const c = city(), all = c.phrases;
+    $("phrases").innerHTML = (allPhrases ? all : all.slice(0, TOP_PHRASES)).map(p =>
+      `<li class="phrase"><span class="say" lang="${c.lang}">${p.say}</span><span class="means">${p.means}</span></li>`).join("");
+    const more = $("more-phrases");
+    more.hidden = all.length <= TOP_PHRASES;
+    more.setAttribute("aria-expanded", allPhrases);
+    more.textContent = allPhrases ? `Show the top ${TOP_PHRASES} only` : `Show all ${all.length} phrases`;
   }
 
   // Businesses that recommend Bule, from data/partners.csv. Shuffled, so no partner is always at the top.
@@ -315,7 +327,7 @@
   // ---------- other events ----------
   function setCity(id) {
     if (id === state.city) return;
-    state.city = id; digits = ""; lastVerdict = "empty"; showAll = false;
+    state.city = id; digits = ""; lastVerdict = "empty"; showAll = false; allPhrases = false;
     $("add-msg").textContent = "";
     save(); renderCity();
     track("city", { city_id: id });
@@ -328,6 +340,7 @@
     if (innerWidth < 900) window.scrollTo({ top: 0, behavior: reduce ? "auto" : "smooth" });
   });
   $("more-prices").addEventListener("click", () => { showAll = !showAll; renderList(); });
+  $("more-phrases").addEventListener("click", () => { allPhrases = !allPhrases; renderPhrases(); });
   $("partners").addEventListener("click", (e) => {
     const a = e.target.closest(".partner");
     if (a && typeof gtag === "function") gtag("event", "partner_click", { city_id: state.city, partner: a.dataset.name });
